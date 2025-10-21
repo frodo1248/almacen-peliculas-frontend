@@ -1,10 +1,27 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { KeycloakProvider, useKeycloak } from './context/KeycloakContext';
 import Layout from './components/Layout';
 import CatalogoPeliculas from './pages/CatalogoPeliculas';
 import './App.css';
 
-function App() {
+// Componente de carga mientras se inicializa Keycloak
+const LoadingSpinner = () => (
+  <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+    <div className="spinner-border text-primary" role="status">
+      <span className="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+);
+
+// Componente principal de la aplicación
+const AppContent = () => {
+  const { loading } = useKeycloak();
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
   return (
     <Layout>
       <Routes>
@@ -14,6 +31,14 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
+  );
+};
+
+function App() {
+  return (
+    <KeycloakProvider>
+      <AppContent />
+    </KeycloakProvider>
   );
 }
 
