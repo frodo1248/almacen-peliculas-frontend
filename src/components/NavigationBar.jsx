@@ -22,7 +22,14 @@ const NavigationBar = () => {
               to="/" 
               active={location.pathname === '/' || location.pathname === '/catalogo'}
             >
-              Catálogo
+              🎬 Catálogo
+            </Nav.Link>
+            <Nav.Link 
+              as={Link} 
+              to="/carrito" 
+              active={location.pathname === '/carrito'}
+            >
+              🛒 Mi Carrito
             </Nav.Link>
             {/* Aquí puedes agregar más opciones en el futuro */}
             {/* 

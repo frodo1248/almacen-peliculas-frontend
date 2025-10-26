@@ -1,12 +1,25 @@
-import React from 'react';
-import { Card, Button, Badge } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Card, Button, Badge, Row, Col } from 'react-bootstrap';
 
-const PeliculaCard = ({ pelicula, onVerDetalles }) => {
+const PeliculaCard = ({ pelicula, onVerDetalles, onAgregarAlCarrito }) => {
+  const [agregandoCarrito, setAgregandoCarrito] = useState(false);
+
   const formatearPrecio = (precio) => {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS'
     }).format(precio);
+  };
+
+  const handleAgregarAlCarrito = async () => {
+    if (onAgregarAlCarrito) {
+      setAgregandoCarrito(true);
+      try {
+        await onAgregarAlCarrito(pelicula.id);
+      } finally {
+        setAgregandoCarrito(false);
+      }
+    }
   };
 
   return (
@@ -50,14 +63,36 @@ const PeliculaCard = ({ pelicula, onVerDetalles }) => {
         </Card.Text>
       </Card.Body>
       <Card.Footer className="bg-light">
-        <Button 
-          variant="outline-primary" 
-          size="sm" 
-          className="w-100"
-          onClick={() => onVerDetalles(pelicula.id)}
-        >
-          Ver Detalles
-        </Button>
+        <Row className="g-2">
+          <Col>
+            <Button 
+              variant="outline-primary" 
+              size="sm" 
+              className="w-100"
+              onClick={() => onVerDetalles(pelicula.id)}
+            >
+              👁️ Ver Detalles
+            </Button>
+          </Col>
+          <Col>
+            <Button 
+              variant="success" 
+              size="sm" 
+              className="w-100"
+              onClick={handleAgregarAlCarrito}
+              disabled={agregandoCarrito || !onAgregarAlCarrito}
+            >
+              {agregandoCarrito ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                  Agregando...
+                </>
+              ) : (
+                <>🛒 Agregar</>
+              )}
+            </Button>
+          </Col>
+        </Row>
       </Card.Footer>
     </Card>
   );

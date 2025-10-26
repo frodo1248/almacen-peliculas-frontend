@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Spinner, Alert, Toast, ToastContainer } from 'react-bootstrap';
 import PeliculaCard from '../components/PeliculaCard';
 import DetallesPeliculaModal from '../components/DetallesPeliculaModal';
 import usePeliculas from '../hooks/usePeliculas';
-import { obtenerPeliculaPorId } from '../services/peliculasService';
+import { obtenerPeliculaPorId, agregarPeliculaAlCarrito } from '../services/peliculasService';
+import { useKeycloak } from '../context/KeycloakContext';
 
 const CatalogoPeliculas = () => {
   const { peliculas, loading, error } = usePeliculas();
+  const { keycloak, authenticated } = useKeycloak();
   const [peliculaSeleccionada, setPeliculaSeleccionada] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loadingDetalles, setLoadingDetalles] = useState(false);
+  
+  // Estados para el toast de notificaciones
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('success');
 
   const handleVerDetalles = async (peliculaId) => {
     try {
@@ -19,10 +26,33 @@ const CatalogoPeliculas = () => {
       setShowModal(true);
     } catch (error) {
       console.error('Error al obtener detalles de la película:', error);
-      // Podrías mostrar un toast o alert aquí
+      mostrarToast('Error al cargar detalles de la película', 'danger');
     } finally {
       setLoadingDetalles(false);
     }
+  };
+
+  const handleAgregarAlCarrito = async (peliculaId) => {
+    // Verificar si está autenticado
+    if (!authenticated) {
+      mostrarToast('Debes iniciar sesión para agregar películas al carrito', 'warning');
+      return;
+    }
+
+    try {
+      const token = keycloak?.token;
+      await agregarPeliculaAlCarrito(peliculaId, token);
+      mostrarToast('¡Película agregada al carrito exitosamente!', 'success');
+    } catch (error) {
+      console.error('Error al agregar película al carrito:', error);
+      mostrarToast('Error al agregar película al carrito', 'danger');
+    }
+  };
+
+  const mostrarToast = (mensaje, variant = 'success') => {
+    setToastMessage(mensaje);
+    setToastVariant(variant);
+    setShowToast(true);
   };
 
   const handleCloseModal = () => {
@@ -68,6 +98,7 @@ const CatalogoPeliculas = () => {
             <PeliculaCard 
               pelicula={pelicula} 
               onVerDetalles={handleVerDetalles}
+              onAgregarAlCarrito={handleAgregarAlCarrito}
             />
           </Col>
         ))}
@@ -95,6 +126,27 @@ const CatalogoPeliculas = () => {
           </Col>
         </Row>
       )}
+
+      {/* Toast Container para notificaciones */}
+      <ToastContainer position="bottom-end" className="p-3">
+        <Toast 
+          show={showToast} 
+          onClose={() => setShowToast(false)} 
+          delay={3000} 
+          autohide
+          bg={toastVariant}
+        >
+          <Toast.Header>
+            <strong className="me-auto">
+              {toastVariant === 'success' ? '✅' : toastVariant === 'warning' ? '⚠️' : '❌'} 
+              {toastVariant === 'success' ? ' Éxito' : toastVariant === 'warning' ? ' Aviso' : ' Error'}
+            </strong>
+          </Toast.Header>
+          <Toast.Body className={toastVariant === 'success' ? 'text-white' : ''}>
+            {toastMessage}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
     </Container>
   );
 };
