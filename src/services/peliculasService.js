@@ -73,3 +73,32 @@ export const agregarPeliculaAlCarrito = async (peliculaId, token = null) => {
     throw error;
   }
 };
+
+// Función para agregar una nueva película al catálogo (Solo ADMIN)
+export const agregarPelicula = async (peliculaData, token = null) => {
+  try {
+    const config = {};
+    
+    // Si hay token, agregarlo a los headers
+    if (token) {
+      config.headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+    }
+    
+    console.log('🎬 Agregando nueva película al catálogo...', peliculaData);
+    
+    const response = await axios.post(
+      `${API_BASE_URL}/catalogo`, 
+      peliculaData,
+      config
+    );
+    
+    console.log('✅ Película agregada al catálogo:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error al agregar película al catálogo:', error);
+    throw error;
+  }
+};

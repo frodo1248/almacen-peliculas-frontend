@@ -7,7 +7,7 @@ import { obtenerPeliculaPorId, agregarPeliculaAlCarrito } from '../services/peli
 import { useKeycloak } from '../context/KeycloakContext';
 
 const CatalogoPeliculas = () => {
-  const { peliculas, loading, error } = usePeliculas();
+  const { peliculas, loading, error, recargarPeliculas } = usePeliculas();
   const { keycloak, authenticated } = useKeycloak();
   const [peliculaSeleccionada, setPeliculaSeleccionada] = useState(null);
   const [showModal, setShowModal] = useState(false);

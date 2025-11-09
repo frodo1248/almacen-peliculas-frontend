@@ -6,25 +6,29 @@ const usePeliculas = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const cargarPeliculas = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await obtenerPeliculas();
-        setPeliculas(data);
-      } catch (err) {
-        setError('Error al cargar las películas');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const cargarPeliculas = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await obtenerPeliculas();
+      setPeliculas(data);
+    } catch (err) {
+      setError('Error al cargar las películas');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     cargarPeliculas();
   }, []);
 
-  return { peliculas, loading, error };
+  const recargarPeliculas = () => {
+    cargarPeliculas();
+  };
+
+  return { peliculas, loading, error, recargarPeliculas };
 };
 
 export default usePeliculas;

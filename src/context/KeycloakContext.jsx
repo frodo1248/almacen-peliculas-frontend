@@ -134,15 +134,58 @@ export const KeycloakProvider = ({ children }) => {
     }
   };
 
+  // Función para verificar si el usuario tiene un rol específico
+  const hasRole = (roleName) => {
+    if (!keycloak || !authenticated) {
+      console.log('❌ No autenticado o keycloak no disponible');
+      return false;
+    }
+    
+    try {
+      // Método 1: Usar las funciones nativas de Keycloak
+      const hasRealmRole = keycloak.hasRealmRole(roleName);
+      const hasResourceRole = keycloak.hasResourceRole(roleName);
+      
+      // Método 2: Verificar directamente en el token parseado
+      const tokenParsed = keycloak.tokenParsed;
+      const realmRoles = tokenParsed?.realm_access?.roles || [];
+      const hasRoleInToken = realmRoles.includes(roleName);
+      
+      console.log('🔍 Verificando rol:', {
+        roleName,
+        hasRealmRole,
+        hasResourceRole,
+        hasRoleInToken,
+        realmRoles,
+        tokenParsed: tokenParsed
+      });
+      
+      return hasRealmRole || hasResourceRole || hasRoleInToken;
+    } catch (error) {
+      console.error('❌ Error verificando rol:', error);
+      return false;
+    }
+  };
+
+  // Función para verificar si el usuario es ADMIN
+  const isAdmin = () => {
+    const result = hasRole('ROLE_ADMIN');
+    console.log('👤 Es admin?', result);
+    return result;
+  };
+
   const value = {
     keycloak,
     authenticated,
     loading,
     initialized,
     error,
+    user: userProfile,
     userProfile,
     login,
-    logout
+    logout,
+    hasRole,
+    isAdmin
   };
 
   return (
