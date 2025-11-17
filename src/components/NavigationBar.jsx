@@ -100,14 +100,19 @@ const NavigationBar = () => {
           {/* Sección de autenticación */}
           <Nav className="ms-auto">
             {authenticated ? (
-              <Dropdown align="end">
+              <Dropdown align="end" drop="down" autoClose="outside">
                 <Dropdown.Toggle variant="outline-light" id="dropdown-user" className="fw-semibold">
                   <i className="bi bi-person-circle me-1"></i>
                   <span className="d-none d-md-inline">
                     {user?.firstName || user?.username || 'Usuario'}
                   </span>
                 </Dropdown.Toggle>
-                <Dropdown.Menu className="shadow">
+                <Dropdown.Menu className="shadow border-0 user-dropdown" style={{ 
+                  minWidth: '250px',
+                  maxHeight: '400px',
+                  overflowY: 'auto',
+                  zIndex: 9999
+                }}>
                   <Dropdown.ItemText>
                     <div className="d-flex align-items-center">
                       <i className="bi bi-envelope me-2 text-muted"></i>
