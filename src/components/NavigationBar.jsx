@@ -45,10 +45,12 @@ const NavigationBar = () => {
   });
   
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" className="shadow">
+    <Navbar bg="dark" variant="dark" expand="lg" className="shadow sticky-top">
       <Container>
-        <Navbar.Brand as={Link} to="/">
-          🎬 Almacén de Películas
+        <Navbar.Brand as={Link} to="/" className="fw-bold">
+          <i className="bi bi-film me-2"></i>
+          <span className="d-none d-sm-inline">Almacén de Películas</span>
+          <span className="d-inline d-sm-none">Películas</span>
         </Navbar.Brand>
         
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -58,15 +60,19 @@ const NavigationBar = () => {
               as={Link} 
               to="/" 
               active={location.pathname === '/' || location.pathname === '/catalogo'}
+              className="fw-semibold"
             >
-              🎬 Catálogo
+              <i className="bi bi-collection-play me-1"></i>
+              Catálogo
             </Nav.Link>
             <Nav.Link 
               as={Link} 
               to="/carrito" 
               active={location.pathname === '/carrito'}
+              className="fw-semibold"
             >
-              🛒 Mi Carrito
+              <i className="bi bi-cart3 me-1"></i>
+              Mi Carrito
             </Nav.Link>
             
             {/* Botón para agregar película - Solo para ADMIN */}
@@ -75,10 +81,12 @@ const NavigationBar = () => {
                 as={Button}
                 variant="outline-success"
                 size="sm"
-                className="mx-2"
+                className="mx-2 fw-semibold"
                 onClick={() => setShowAgregarModal(true)}
               >
-                ➕ Agregar Película
+                <i className="bi bi-plus-circle me-1"></i>
+                <span className="d-none d-lg-inline">Agregar Película</span>
+                <span className="d-inline d-lg-none">Agregar</span>
               </Nav.Link>
             )}
             
@@ -93,24 +101,33 @@ const NavigationBar = () => {
           <Nav className="ms-auto">
             {authenticated ? (
               <Dropdown align="end">
-                <Dropdown.Toggle variant="outline-light" id="dropdown-user">
-                  👤 {user?.firstName || user?.username || 'Usuario'}
+                <Dropdown.Toggle variant="outline-light" id="dropdown-user" className="fw-semibold">
+                  <i className="bi bi-person-circle me-1"></i>
+                  <span className="d-none d-md-inline">
+                    {user?.firstName || user?.username || 'Usuario'}
+                  </span>
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="shadow">
                   <Dropdown.ItemText>
-                    <small className="text-muted">
-                      {user?.email || 'Email no disponible'}
-                    </small>
+                    <div className="d-flex align-items-center">
+                      <i className="bi bi-envelope me-2 text-muted"></i>
+                      <small className="text-muted">
+                        {user?.email || 'Email no disponible'}
+                      </small>
+                    </div>
                   </Dropdown.ItemText>
                   <Dropdown.Divider />
-                  <Dropdown.Item onClick={logout}>
-                    🚪 Cerrar Sesión
+                  <Dropdown.Item onClick={logout} className="fw-semibold">
+                    <i className="bi bi-box-arrow-right me-2 text-danger"></i>
+                    Cerrar Sesión
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Button variant="outline-light" onClick={login}>
-                🔐 Iniciar Sesión
+              <Button variant="outline-light" onClick={login} className="fw-semibold">
+                <i className="bi bi-box-arrow-in-right me-1"></i>
+                <span className="d-none d-sm-inline">Iniciar Sesión</span>
+                <span className="d-inline d-sm-none">Ingresar</span>
               </Button>
             )}
           </Nav>

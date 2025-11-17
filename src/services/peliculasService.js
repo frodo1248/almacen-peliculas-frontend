@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Base URL de tu API
-const API_BASE_URL = 'http://localhost:8081';
-const CARRITO_API_URL = 'http://localhost:8080';
+// Usando el proxy de Vite para evitar problemas de CORS
+const API_BASE_URL = '/api';
+const CARRITO_API_URL = '/api';
 
 // Función para obtener películas desde tu API
 export const obtenerPeliculas = async () => {

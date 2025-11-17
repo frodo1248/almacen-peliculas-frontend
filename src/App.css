@@ -6,6 +6,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #FFB795 0%, #FFA07A 50%, #FFDAB9 100%);
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 #root {
@@ -22,7 +23,9 @@ body {
 
 main {
   flex: 1;
-  padding-top: 1rem;
+  padding-top: 2rem;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .card {
@@ -37,4 +40,124 @@ main {
 .spinner-border {
   width: 3rem;
   height: 3rem;
+}
+
+/* Asegurar que el navbar esté siempre visible */
+.navbar {
+  z-index: 1030;
+  width: 100%;
+}
+
+.sticky-top {
+  position: sticky;
+  top: 0;
+}
+
+/* Mejoras de responsividad para las tarjetas de películas */
+.pelicula-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Asegurar que las imágenes se mantengan proporcionales y consistentes */
+.card-img-top {
+  width: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+/* Hacer que el cuerpo de la tarjeta sea flexible */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-footer {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+/* Asegurar que el contenedor principal no se desborde */
+.container {
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+@media (max-width: 575px) {
+
+  /* Móvil: 1 por fila */
+  .card-img-top {
+    height: 250px;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  .card-footer {
+    padding: 0.5rem;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+
+  /* Móvil grande: 2 por fila */
+  .card-img-top {
+    height: 220px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+  /* Tablet: 3 por fila */
+  .card-img-top {
+    height: 200px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+  /* Desktop pequeño: 4 por fila */
+  .card-img-top {
+    height: 220px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+
+  /* Desktop: 4 por fila */
+  .card-img-top {
+    height: 240px;
+  }
+}
+
+@media (min-width: 1400px) {
+
+  /* Desktop muy grande: 6 por fila */
+  .card-img-top {
+    height: 200px;
+  }
+}
+
+/* Asegurar scroll vertical suave */
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Mejorar el espaciado entre filas */
+.row.g-3 {
+  margin-bottom: 2rem;
 }
