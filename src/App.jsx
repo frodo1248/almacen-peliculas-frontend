@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { KeycloakProvider, useKeycloak } from './context/KeycloakContext';
+import useSessionCheck from './hooks/useSessionCheck';
 import Layout from './components/Layout';
 import CatalogoPeliculas from './pages/CatalogoPeliculas';
 import Carrito from './pages/Carrito';
@@ -18,6 +19,9 @@ const LoadingSpinner = () => (
 // Componente principal de la aplicación
 const AppContent = () => {
   const { loading } = useKeycloak();
+  
+  // NOTE: Deshabilitado temporalmente - ahora usamos check-sso directamente
+  // useSessionCheck();
 
   if (loading) {
     return <LoadingSpinner />;

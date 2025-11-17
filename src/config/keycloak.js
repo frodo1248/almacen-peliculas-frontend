@@ -1,4 +1,4 @@
-// Configuración de Keycloak estándar
+// Configuración de Keycloak con opciones de sesión mejoradas
 const keycloakConfig = {
   url: 'http://localhost:9090',  // Sin la barra final
   realm: 'videoclub',

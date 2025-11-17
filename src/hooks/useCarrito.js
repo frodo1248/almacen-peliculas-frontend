@@ -9,16 +9,22 @@ const useCarrito = () => {
   const { keycloak, authenticated } = useKeycloak();
 
   const cargarCarrito = async () => {
+    // No hacer nada si no está autenticado
+    if (!authenticated || !keycloak?.token) {
+      console.log('🛒 No autenticado, no se carga carrito');
+      setCarrito([]);
+      setLoading(false);
+      setError(null);
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
       
-      // Obtener token si el usuario está autenticado
-      const token = authenticated && keycloak?.token ? keycloak.token : null;
+      console.log('🛒 Cargando carrito...', { authenticated, hasToken: !!keycloak.token });
       
-      console.log('🛒 Cargando carrito...', { authenticated, hasToken: !!token });
-      
-      const datosCarrito = await obtenerCarrito(token);
+      const datosCarrito = await obtenerCarrito(keycloak.token);
       setCarrito(datosCarrito);
       
       console.log('✅ Carrito cargado:', datosCarrito);
@@ -31,11 +37,20 @@ const useCarrito = () => {
     }
   };
 
-  // Cargar carrito cuando el componente se monta o cambia la autenticación
+  // Cargar carrito SOLO cuando hay autenticación válida
   useEffect(() => {
-    if (authenticated !== undefined) { // Esperar a que se resuelva la autenticación
+    // Solo intentar cargar si está autenticado Y tiene token
+    if (authenticated === true && keycloak?.token) {
+      console.log('🛒 Usuario autenticado, cargando carrito...');
       cargarCarrito();
+    } else if (authenticated === false) {
+      // Si no está autenticado, limpiar carrito sin hacer request
+      console.log('🚪 Usuario no autenticado, limpiando carrito...');
+      setCarrito([]);
+      setLoading(false);
+      setError(null);
     }
+    // Si authenticated === undefined, no hacer nada (aún inicializando)
   }, [authenticated, keycloak?.token]);
 
   const recargarCarrito = () => {
